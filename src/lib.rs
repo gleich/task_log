@@ -13,3 +13,15 @@ where
     println!("  {}     | {}", "DONE".green(), name);
     result
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::task;
+
+    #[test]
+    fn basic_run() {
+        let name = "basic run";
+        assert_eq!(3, task(name, || -> u32 { 1 + 2 }));
+        assert_eq!(true, task(name, || -> bool { true }));
+    }
+}
