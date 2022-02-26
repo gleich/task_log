@@ -2,13 +2,14 @@ use std::fmt::Display;
 
 use colorful::Colorful;
 
-pub fn task<S, F>(name: S, runner: F)
+pub fn task<S, F, R>(name: S, mut runner: F) -> R
 where
-    F: FnOnce(),
+    F: FnMut() -> R,
     S: Display,
 {
     println!("  {}  | {}", "RUNNING".yellow(), name);
-    runner();
+    let result = runner();
     println!("\x1b[A\x1b[A");
     println!("  {}     | {}", "DONE".green(), name);
+    result
 }
