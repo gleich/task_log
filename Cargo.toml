@@ -3,6 +3,9 @@ name = "task_log"
 version = "0.1.0"
 edition = "2021"
 license = "MPL-2.0"
+readme = "README.md"
+description = "Task based logging"
+documetnation = "https://docs.rs/task_log"
 
 [dependencies]
 colorful = "0.2.1"
