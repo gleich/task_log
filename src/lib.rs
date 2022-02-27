@@ -106,9 +106,9 @@ impl Default for ConfigBuilder {
 /// })
 /// .expect("Failed to create and remove the file");
 /// ```
-pub fn task<M, F, R>(msg: M, mut runner: F) -> R
+pub fn task<M, F, R>(msg: M, runner: F) -> R
 where
-	F: FnMut() -> R,
+	F: FnOnce() -> R,
 	M: Display,
 {
 	let arc_ref = Arc::clone(&CONF);
