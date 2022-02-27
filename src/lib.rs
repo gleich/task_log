@@ -1,16 +1,15 @@
-use std::{
-    fmt::Display,
-    sync::{Arc, Mutex, MutexGuard, PoisonError},
-};
+use std::fmt::Display;
+use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
 
 mod util;
 
 use chrono::Utc;
-use colorful::{core::color_string::CString, Colorful};
+use colorful::core::color_string::CString;
+use colorful::Colorful;
 use lazy_static::lazy_static;
 
 lazy_static! {
-    static ref CONF: Arc<Mutex<ConfigBuilder>> = Arc::new(Mutex::new(ConfigBuilder::default()));
+	static ref CONF: Arc<Mutex<ConfigBuilder>> = Arc::new(Mutex::new(ConfigBuilder::default()));
 }
 
 /// Configure task_log using this interactive configuration struct.
@@ -22,51 +21,49 @@ lazy_static! {
 /// use task_log::ConfigBuilder;
 ///
 /// ConfigBuilder::new()
-///     .color(false)
-///     .duration(false)
-///     .apply()
-///     .expect("Failed to configure logger");
+/// 	.color(false)
+/// 	.duration(false)
+/// 	.apply()
+/// 	.expect("Failed to configure logger");
 /// ```
 pub struct ConfigBuilder {
-    /// If the prefix (e.g. "DONE" or "RUNNING") should be in color.
-    pub color: bool,
-    /// If the duration that the task took should be included in the prefix (e.g. "DONE") at the end of the task.
-    pub duration: bool,
+	/// If the prefix (e.g. "DONE" or "RUNNING") should be in color.
+	pub color: bool,
+	/// If the duration that the task took should be included in the prefix (e.g. "DONE") at the end of the task.
+	pub duration: bool,
 }
 
 impl ConfigBuilder {
-    /// Create a new ConfigBuilder off of the default struct values.
-    pub fn new() -> Self {
-        Self::default()
-    }
+	/// Create a new ConfigBuilder off of the default struct values.
+	pub fn new() -> Self { Self::default() }
 
-    /// Set the color value
-    pub fn color(mut self, enabled: bool) -> Self {
-        self.color = enabled;
-        self
-    }
+	/// Set the color value
+	pub fn color(mut self, enabled: bool) -> Self {
+		self.color = enabled;
+		self
+	}
 
-    /// Set the duration value
-    pub fn duration(mut self, enabled: bool) -> Self {
-        self.duration = enabled;
-        self
-    }
+	/// Set the duration value
+	pub fn duration(mut self, enabled: bool) -> Self {
+		self.duration = enabled;
+		self
+	}
 
-    /// Apply the configuration
-    pub fn apply<'a>(self) -> Result<(), PoisonError<MutexGuard<'a, Self>>> {
-        let mut changer = CONF.lock()?;
-        *changer = self;
-        Ok(())
-    }
+	/// Apply the configuration
+	pub fn apply<'a>(self) -> Result<(), PoisonError<MutexGuard<'a, Self>>> {
+		let mut changer = CONF.lock()?;
+		*changer = self;
+		Ok(())
+	}
 }
 
 impl Default for ConfigBuilder {
-    fn default() -> Self {
-        ConfigBuilder {
-            color: true,
-            duration: true,
-        }
-    }
+	fn default() -> Self {
+		ConfigBuilder {
+			color: true,
+			duration: true,
+		}
+	}
 }
 
 /// Automatic logging for function execution.
@@ -89,83 +86,83 @@ impl Default for ConfigBuilder {
 /// ```
 /// use task_log::task;
 ///
-/// let sum = task("Adding 1 and 2", || -> u32 {
-///     1 + 2
-/// });
+/// let sum = task("Adding 1 and 2", || -> u32 { 1 + 2 });
 /// println!("Sum of 1 and 2 is {}", sum);
 /// ```
 ///
 /// ## Error Example
 ///
 /// ```
-/// use std::{fs, io::Result};
+/// use std::fs;
+/// use std::io::Result;
 ///
 /// use task_log::task;
 ///
 /// task("Creating and removing file", || -> Result<()> {
-///     let filename = "hello.txt";
-///     fs::write(filename, "foo bar")?;
-///     fs::remove_file(filename)?;
-///     Ok(())
-/// }).expect("Failed to create and remove the file");
+/// 	let filename = "hello.txt";
+/// 	fs::write(filename, "foo bar")?;
+/// 	fs::remove_file(filename)?;
+/// 	Ok(())
+/// })
+/// .expect("Failed to create and remove the file");
 /// ```
 pub fn task<M, F, R>(msg: M, mut runner: F) -> R
 where
-    F: FnMut() -> R,
-    M: Display,
+	F: FnMut() -> R,
+	M: Display,
 {
-    let arc_ref = Arc::clone(&CONF);
-    let config = arc_ref.lock().unwrap();
+	let arc_ref = Arc::clone(&CONF);
+	let config = arc_ref.lock().unwrap();
 
-    // START
-    let start_time = Utc::now();
-    let running_msg = if config.duration {
-        "  RUNNING       "
-    } else {
-        "  RUNNING  "
-    };
-    println!(
-        "{}| {}",
-        if config.color {
-            running_msg.yellow()
-        } else {
-            CString::new(running_msg)
-        },
-        msg
-    );
+	// START
+	let start_time = Utc::now();
+	let running_msg = if config.duration {
+		"  RUNNING       "
+	} else {
+		"  RUNNING  "
+	};
+	println!(
+		"{}| {}",
+		if config.color {
+			running_msg.yellow()
+		} else {
+			CString::new(running_msg)
+		},
+		msg
+	);
 
-    let result = runner();
+	let result = runner();
 
-    // DONE
-    println!("\x1b[A\x1b[A");
-    let done_msg = if config.duration {
-        format!(
-            "  DONE in {}  ",
-            util::format_duration(Utc::now() - start_time)
-        )
-    } else {
-        String::from("  DONE    ")
-    };
-    println!(
-        "{} | {}",
-        if config.color {
-            done_msg.green()
-        } else {
-            CString::new(done_msg)
-        },
-        msg
-    );
-    result
+	// DONE
+	println!("\x1b[A\x1b[A");
+	let done_msg = if config.duration {
+		format!(
+			"  DONE in {}  ",
+			util::format_duration(Utc::now() - start_time)
+		)
+	} else {
+		String::from("  DONE    ")
+	};
+	println!(
+		"{} | {}",
+		if config.color {
+			done_msg.green()
+		} else {
+			CString::new(done_msg)
+		},
+		msg
+	);
+	result
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::task;
+	use crate::task;
 
-    #[test]
-    fn basic_run() {
-        let name = "basic run";
-        assert_eq!(3, task(name, || -> u32 { 1 + 2 }));
-        assert_eq!(true, task(name, || -> bool { true }));
-    }
+	#[test]
+	fn basic_run() {
+		let name = "basic run";
+		assert_eq!(3, task(name, || -> u32 { 1 + 2 }));
+		assert_eq!(true, task(name, || -> bool { true }));
+	}
 }
