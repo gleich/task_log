@@ -1,11 +1,12 @@
 [package]
 name = "task_log"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MPL-2.0"
 readme = "README.md"
 description = "Task based logging"
-documetnation = "https://docs.rs/task_log"
+documentation = "https://docs.rs/task_log"
+repository = "https://github.com/gleich/task_log"
 
 [dependencies]
 colorful = "0.2.1"
