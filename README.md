@@ -10,7 +10,7 @@ task_log is a task-based logger.
 
 ## Installing
 
-Just add `task_log = 0.1.0` to your Cargo.toml's `dependency` section.
+Just add `task_log = 0.1.2` to your Cargo.toml's `dependency` section.
 
 ## Example
 
@@ -38,7 +38,7 @@ fn main() {
 
 As you can see we provide a task to run and a description of what that task is doing. When we run this code we get the following output.
 
-![demo](demo.gif)
+![demo](https://raw.githubusercontent.com/gleich/task_log/main/demo.gif)
 
 To see more examples see the [examples folder](./examples/).
 
@@ -72,9 +72,9 @@ To learn more about `ConfigBuilder` please reference the [docs.rs documentation]
 
 ## Future Plans
 
-Here are some features I am hoping to implement in the future:
+Here are some features I'm hoping to implement in the future:
 
-- Run time: Output the run time so far in the `RUNNING` prefix;
-- Spinners: Show a loading symbol for long running tasks.
+- Run time: Output the run time so far in the `RUNNING` prefix.
+- Spinners: Show a loading symbol for long-running tasks.
 - File output: Allow writing of logs to a file.
-- Double log lines: Option to output log to second line instead of replacing the first one.
+- Double log lines: Option to output log to a second line instead of replacing the first one.
