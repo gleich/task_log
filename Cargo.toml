@@ -5,4 +5,8 @@ edition = "2021"
 
 [dependencies]
 colorful = "0.2.1"
+chrono = "0.4.19"
+lazy_static = "1.4.0"
+
+[dev-dependencies]
 anyhow = "1.0.55"
