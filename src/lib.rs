@@ -10,24 +10,42 @@ use colorful::{core::color_string::CString, Colorful};
 use lazy_static::lazy_static;
 
 lazy_static! {
-    static ref CONF: Arc<Mutex<Conf>> = Arc::new(Mutex::new(Conf::default()));
+    static ref CONF: Arc<Mutex<ConfigBuilder>> = Arc::new(Mutex::new(ConfigBuilder::default()));
 }
 
-pub struct Conf {
+pub struct ConfigBuilder {
     pub color: bool,
+    pub duration: bool,
 }
 
-impl Conf {
-    pub fn apply<'a>(self) -> Result<(), PoisonError<MutexGuard<'a, Conf>>> {
+impl ConfigBuilder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn color(mut self, enabled: bool) -> Self {
+        self.color = enabled;
+        self
+    }
+
+    pub fn duration(mut self, enabled: bool) -> Self {
+        self.duration = enabled;
+        self
+    }
+
+    pub fn apply<'a>(self) -> Result<(), PoisonError<MutexGuard<'a, Self>>> {
         let mut changer = CONF.lock()?;
         *changer = self;
         Ok(())
     }
 }
 
-impl Default for Conf {
-    fn default() -> Conf {
-        Conf { color: true }
+impl Default for ConfigBuilder {
+    fn default() -> Self {
+        ConfigBuilder {
+            color: true,
+            duration: true,
+        }
     }
 }
 
@@ -41,7 +59,11 @@ where
 
     // START
     let start_time = Utc::now();
-    let running_msg = "  RUNNING       ";
+    let running_msg = if config.duration {
+        "  RUNNING       "
+    } else {
+        "  RUNNING  "
+    };
     println!(
         "{}| {}",
         if config.color {
@@ -56,10 +78,14 @@ where
 
     // DONE
     println!("\x1b[A\x1b[A");
-    let done_msg = format!(
-        "  DONE in {}  ",
-        util::format_duration(Utc::now() - start_time)
-    );
+    let done_msg = if config.duration {
+        format!(
+            "  DONE in {}  ",
+            util::format_duration(Utc::now() - start_time)
+        )
+    } else {
+        String::from("  DONE    ")
+    };
     println!(
         "{} | {}",
         if config.color {
