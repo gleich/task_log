@@ -1,22 +1,22 @@
-use std::{fs, thread, time::Duration};
+use std::{fs, io::Result, thread, time::Duration};
 
-use anyhow::Result;
 use task_log::task;
 
 fn main() {
-    let file_name = "testing_testing.txt";
+    let filename = "testing_testing.txt";
 
     task(
         format!(
             "Creating {fname}, waiting 2 seconds, and then deleting {fname}",
-            fname = file_name
+            fname = filename
         ),
         || -> Result<()> {
-            fs::write(file_name, "Hello World")?;
+            fs::write(filename, "Hello World")?;
             thread::sleep(Duration::from_secs(2));
+            // Purposely giving the wrong filename to make the function fail.
             fs::remove_file("test")?;
             Ok(())
         },
     )
-    .expect("Failed to work with the file");
+    .expect("Failed to create and delete the file");
 }
