@@ -3,7 +3,8 @@
 [![build](https://github.com/gleich/task_log/actions/workflows/build.yml/badge.svg)](https://github.com/gleich/task_log/actions/workflows/build.yml)
 [![test](https://github.com/gleich/task_log/actions/workflows/test.yml/badge.svg)](https://github.com/gleich/task_log/actions/workflows/test.yml)
 [![lint](https://github.com/gleich/task_log/actions/workflows/lint.yml/badge.svg)](https://github.com/gleich/task_log/actions/workflows/lint.yml)
-![Crates.io](https://img.shields.io/crates/v/task_log)
+[![docs.rs](https://img.shields.io/docsrs/task_log)](https://docs.rs/task_log/)
+[![Crates.io](https://img.shields.io/crates/v/task_log)](https://crates.io/crates/task_log/)
 
 task_log is a task-based logger.
 
