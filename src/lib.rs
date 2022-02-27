@@ -19,6 +19,8 @@ lazy_static! {
 ///
 /// ## Example:
 /// ```
+/// use task_log::ConfigBuilder;
+///
 /// ConfigBuilder::new()
 ///     .color(false)
 ///     .duration(false)
@@ -85,6 +87,8 @@ impl Default for ConfigBuilder {
 /// ## Basic Example
 ///
 /// ```
+/// use task_log::task;
+///
 /// let sum = task("Adding 1 and 2", || -> u32 {
 ///     1 + 2
 /// });
@@ -94,10 +98,15 @@ impl Default for ConfigBuilder {
 /// ## Error Example
 ///
 /// ```
+/// use std::{fs, io::Result};
+///
+/// use task_log::task;
+///
 /// task("Creating and removing file", || -> Result<()> {
 ///     let filename = "hello.txt";
 ///     fs::write(filename, "foo bar")?;
 ///     fs::remove_file(filename)?;
+///     Ok(())
 /// }).expect("Failed to create and remove the file");
 /// ```
 pub fn task<M, F, R>(msg: M, mut runner: F) -> R
