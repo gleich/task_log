@@ -117,7 +117,7 @@ where
 	// START
 	let start_time = Utc::now();
 	let running_msg = if config.duration {
-		"  RUNNING       "
+		"  RUNNING        "
 	} else {
 		"  RUNNING  "
 	};
@@ -137,7 +137,7 @@ where
 	println!("\x1b[A\x1b[A");
 	let done_msg = if config.duration {
 		format!(
-			"  DONE in {}  ",
+			"  DONE in {}",
 			util::format_duration(Utc::now() - start_time)
 		)
 	} else {
