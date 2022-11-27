@@ -10,7 +10,7 @@ task_log is a task-based logger.
 
 ## Installing
 
-Just add `task_log = 0.1.4` to your Cargo.toml's `dependency` section.
+Just add `task_log = 0.1.5` to your Cargo.toml's `dependency` section.
 
 ## Example
 
