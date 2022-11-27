@@ -31,6 +31,8 @@ pub struct ConfigBuilder {
 	pub color: bool,
 	/// If the duration that the task took should be included in the prefix (e.g. "DONE") at the end of the task.
 	pub duration: bool,
+	/// If the running output should be replaced with "DONE"
+	pub replace: bool,
 }
 
 impl ConfigBuilder {
@@ -49,6 +51,11 @@ impl ConfigBuilder {
 		self
 	}
 
+	pub fn replace(mut self, replace: bool) -> Self {
+		self.replace = replace;
+		self
+	}
+
 	/// Apply the configuration
 	pub fn apply<'a>(self) -> Result<(), PoisonError<MutexGuard<'a, Self>>> {
 		let mut changer = CONF.lock()?;
@@ -62,6 +69,7 @@ impl Default for ConfigBuilder {
 		ConfigBuilder {
 			color: true,
 			duration: true,
+			replace: true,
 		}
 	}
 }
@@ -134,7 +142,9 @@ where
 	let result = runner();
 
 	// DONE
-	println!("\x1b[A\x1b[A");
+	if config.replace {
+		println!("\x1b[A\x1b[A");
+	}
 	let done_msg = if config.duration {
 		format!(
 			"  DONE in {}",
