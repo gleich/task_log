@@ -10,8 +10,8 @@ repository = "https://github.com/gleich/task_log"
 
 [dependencies]
 colorful = "0.2.1"
-chrono = "0.4.19"
+chrono = "0.4.23"
 lazy_static = "1.4.0"
 
 [dev-dependencies]
-anyhow = "1.0.55"
+anyhow = "1.0.66"
